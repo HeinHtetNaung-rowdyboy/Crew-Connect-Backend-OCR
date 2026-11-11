@@ -1,0 +1,11 @@
+{
+  "notes": "Starter labels based on supplied PDFs. Confirm all dates and classification metadata before production use. Examples are not training a model automatically.",
+  "examples": [
+    {"file": "samples/all_in_one/all-in-one.pdf", "certificate_name": "All in One", "issue_date": "2023-11-21", "expire_date": "2028-10-25", "license_number": "ERP075076"},
+    {"file": "samples/pssr/pssr.pdf", "certificate_name": "PSSR",  "issue_date": "2026-08-10", "expire_date": null, "license_number": "MES/HSB 19-194/2026"},
+    {"file": "samples/covid_vaccine/covid-vaccination.pdf", "certificate_name": "COVID Vaccine","start_date": "2022-04-21", "expire_date": null},
+    {"file": "samples/passport/passport.pdf", "certificate_name": "여권/Passport", "issue_date": "2024-01-18", "expire_date": "2029-01-17", "license_number": "MI449665"},
+    {"file": "samples/sid/SID.pdf", "certificate_name": "선원등록증/SID","issue_date": "2025-02-13", "expire_date": "2030-02-13", "license_number": "MS0095000"},
+    {"file": "samples/seaman-book/seaman-book.pdf", "certificate_name": "선원수첩/Seaman Book (MM)", "issue_date": "2019-03-26", "expire_date": "2029-03-25", "license_number": "75076"}
+  ]
+}

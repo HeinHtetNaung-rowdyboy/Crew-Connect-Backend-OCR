@@ -1,0 +1,5 @@
+# Install base requirements first. PaddleOCR 3.x requires a compatible PaddlePaddle runtime.
+# On Windows CPU: follow official PaddlePaddle installation instructions for your Python version.
+paddleocr>=3.0,<4
+paddlepaddle
+numpy>=1.26,<3
