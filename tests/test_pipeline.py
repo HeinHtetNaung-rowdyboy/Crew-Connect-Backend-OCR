@@ -28,7 +28,7 @@ def test_expiration_logic():
 
 
 def test_sample_files():
-    names = {'pssr': 'PSSR', 'all_in_one': 'All in One', 'passport': 'Passport (MM)', 'covid_vaccine': 'COVID Vaccine'}
+    names = {'pssr': 'PSSR', 'all_in_one': 'All in One', 'passport': '여권/Passport', 'covid_vaccine': 'COVID Vaccine'}
     for folder, expected in names.items():
         path = ROOT/'data'/'samples'/folder/'sample_001.pdf'
         if path.exists():

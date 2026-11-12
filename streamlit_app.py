@@ -1,4 +1,3 @@
-
 """Streamlit uploader for Maritime AI FastAPI."""
 
 import os
@@ -55,7 +54,8 @@ st.sidebar.info(
 try:
     response = httpx.get(
         url.rstrip("/") + "/health",
-        timeout=3
+        timeout=3,
+        trust_env=False
     )
 
     response.raise_for_status()
@@ -104,7 +104,8 @@ if upload and st.button(
                     "use_ollama": str(use_qwen).lower()
                 },
 
-                timeout=600
+                timeout=600,
+                trust_env=False
             )
 
             response.raise_for_status()

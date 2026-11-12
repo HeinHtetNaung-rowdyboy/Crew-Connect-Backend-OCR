@@ -1,6 +1,6 @@
-
 """Extract PDF text with PyMuPDF and configurable OCR for scanned pages."""
 
+import time
 from pathlib import Path
 from functools import lru_cache
 
@@ -24,13 +24,35 @@ def _make_paddle(language: str):
 
     from paddleocr import PaddleOCR
 
-    return PaddleOCR(
-        lang=language,
+    cfg = settings()
+    kwargs = dict(
         use_doc_orientation_classify=False,
         use_doc_unwarping=False,
         use_textline_orientation=False,
-        enable_mkldnn=False
+        enable_mkldnn=False,
+        text_det_limit_type="max",
+        text_det_limit_side_len=cfg["paddle_det_side"],
     )
+
+    # Explicit model names make PaddleOCR ignore `lang`.
+    if cfg["paddle_det_model"]:
+        kwargs["text_detection_model_name"] = cfg["paddle_det_model"]
+    if cfg["paddle_rec_model"]:
+        kwargs["text_recognition_model_name"] = cfg["paddle_rec_model"]
+    if not (cfg["paddle_det_model"] or cfg["paddle_rec_model"]):
+        kwargs["lang"] = language
+    if cfg["paddle_cpu_threads"] > 0:
+        kwargs["cpu_threads"] = cfg["paddle_cpu_threads"]
+
+    return PaddleOCR(**kwargs)
+
+
+def warmup():
+    """Load the PaddleOCR model once at startup so the first request is not slow."""
+    conf = settings()
+    if "paddleocr" in conf["ocr_cascade"] or conf["ocr_engine"] == "paddleocr":
+        from PIL import Image
+        _paddle_ocr(Image.new("RGB", (320, 120), "white"), conf["paddleocr_lang"])
 
 
 # --------------------------------------------------
@@ -180,7 +202,7 @@ def ocr_image(image, conf: dict):
 # PDF processing
 # --------------------------------------------------
 
-def parse_pdf(path: Path) -> dict:
+def parse_pdf(path: Path, engine: str | None = None) -> dict:
     """
     Extract text from a PDF.
 
@@ -192,9 +214,27 @@ def parse_pdf(path: Path) -> dict:
 
     conf = settings()
 
+    # Cascade mode: run exactly one engine, no hidden fallback.
+    if engine:
+        conf = {**conf, "ocr_engine": engine, "ocr_fallback": "none"}
+
+    zoom = (
+        conf["paddle_zoom"]
+        if conf["ocr_engine"] == "paddleocr"
+        else conf["tesseract_zoom"]
+    )
+
     pages = []
 
     engines_used = set()
+
+    ocr_seconds = 0.0
+
+    last_failure = None
+
+    ocr_attempted = 0
+
+    ocr_succeeded = 0
 
     with fitz.open(path) as pdf:
 
@@ -220,6 +260,8 @@ def parse_pdf(path: Path) -> dict:
             ).strip()
 
             # Determine whether OCR is needed
+            # Any page with an image is OCR'd: scanned PDFs often carry a
+            # garbage text layer that looks long but is unusable.
             requires_ocr = (
                 len(content) < conf["ocr_min_text"]
                 or bool(page.get_images(full=True))
@@ -230,10 +272,15 @@ def parse_pdf(path: Path) -> dict:
                 from PIL import Image
 
                 # Render PDF page as image
-                pix = page.get_pixmap(
-                    matrix=fitz.Matrix(2, 2),
-                    alpha=False
+                from app.ocr.regions import page_clip, render
+
+                clip = (
+                    page_clip(page, conf["crop_max_area"], conf["crop_max_outside"])
+                    if conf["autocrop"]
+                    else None
                 )
+
+                pix = render(page, zoom, conf["ocr_crop_px"], clip)
 
                 image = Image.frombytes(
                     "RGB",
@@ -241,33 +288,48 @@ def parse_pdf(path: Path) -> dict:
                     pix.samples
                 )
 
+                started = time.perf_counter()
+
+                ocr_attempted += 1
+
                 try:
 
-                    ocr_text, engine = ocr_image(
+                    ocr_text, used = ocr_image(
                         image,
                         conf
                     )
 
+                    ocr_seconds += time.perf_counter() - started
+
                     if ocr_text:
+
+                        ocr_succeeded += 1
 
                         # Combine extracted PDF text and OCR text
                         content = (
                             content + "\n" + ocr_text
                         ).strip()
 
-                        engines_used.add(engine)
+                        engines_used.add(used)
 
-                except RuntimeError:
+                except RuntimeError as exc:
 
-                    # Preserve embedded text when OCR fails
-                    if not content:
-                        raise
+                    ocr_seconds += time.perf_counter() - started
+
+                    # One blank/unreadable page must not fail the whole
+                    # document; it is only an error if NO page has text.
+                    last_failure = exc
 
             pages.append({
                 "page": i + 1,
                 "text": content
             })
     
+    # A blank page is tolerated, but an engine that read NOTHING (crash,
+    # missing model) must fail loudly instead of passing on junk text layers.
+    if ocr_attempted and not ocr_succeeded and last_failure is not None:
+        raise last_failure
+
     return {
         "text": "\n\n".join(
             item["text"] for item in pages
@@ -276,5 +338,6 @@ def parse_pdf(path: Path) -> dict:
         "engine": "local",
         "ocr_engines_used": sorted(
             engines_used
-        )
+        ),
+        "ocr_seconds": round(ocr_seconds, 2)
     }

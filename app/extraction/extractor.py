@@ -1,4 +1,3 @@
-
 """Conservative deterministic extractor: absent/unclear fields are null."""
 
 import re
@@ -168,6 +167,49 @@ def extract_seaman_book_number(text: str) -> str | None:
             continue
 
         return number
+
+    return None
+
+
+# --------------------------------------------------
+# PASSPORT: CURRENT PASSPORT NUMBER
+# --------------------------------------------------
+
+def extract_passport_number(text: str) -> str | None:
+    """
+    Return the CURRENT passport number, or None.
+
+    1. Prefer the machine-readable zone (line 2 starts with the number).
+    2. Else a "Passport No" label, ignoring numbers that refer to an older
+       passport ("issued in replacement of passport No. ...").
+    Returning None is deliberate: a missing number is reviewed, a wrong one
+    that looks valid is not.
+    """
+
+    mrz = re.search(
+        r"\b([A-Z]{1,2}\d{6,8})<{0,3}\d?[A-Z]{3}\d{6}\d?[MF<]",
+        text
+    )
+
+    if mrz:
+        return mrz.group(1)
+
+    for match in re.finditer(
+        r"passport\s*(?:number|no\.?|#)\s*[:#-]?\s*"
+        r"([A-Z]{1,2}\s?\d{6,8})\b",
+        text,
+        re.IGNORECASE
+    ):
+
+        before = text[max(0, match.start() - 80):match.start()].casefold()
+
+        if re.search(
+            r"replacement|previous|former|\bold\b|in lieu|cancel",
+            before
+        ):
+            continue
+
+        return re.sub(r"\s+", "", match.group(1)).upper()
 
     return None
 
@@ -389,5 +431,12 @@ def extract_fields(
 
         if book_number:
             output["license_number"] = book_number
+
+    # ----------------------------------------------
+    # 8. Passport-specific current passport number
+    # ----------------------------------------------
+
+    if "passport" in certificate_name.casefold():
+        output["license_number"] = extract_passport_number(text)
 
     return output

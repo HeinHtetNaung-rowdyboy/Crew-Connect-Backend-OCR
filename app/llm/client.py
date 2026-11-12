@@ -9,7 +9,7 @@ class OllamaError(RuntimeError): pass
 
 def available():
     try:
-        r=httpx.get(settings()['ollama_url'].rstrip('/')+'/api/tags',timeout=3)
+        r=httpx.get(settings()['ollama_url'].rstrip('/')+'/api/tags',timeout=3,trust_env=False)
         return r.status_code==200
     except (httpx.HTTPError, ValueError): return False
 
@@ -17,13 +17,13 @@ def chat(system: str, prompt: str, images: list[bytes]|None=None, json_output=Tr
     conf=settings()
     msg={'role':'user','content':prompt}
     if images: msg['images']=[base64.b64encode(image).decode('ascii') for image in images]
-    payload={'model':conf['ollama_model'],'stream':False,'messages':[{'role':'system','content':system},msg], 'options':{'temperature':0}}
+    payload={'model':conf['ollama_model'],'stream':False,'messages':[{'role':'system','content':system},msg], 'think':False,'keep_alive':'30m','options':{'temperature':0,'num_ctx':8192}}
     if json_output: payload['format']='json'
     try:
-        response=httpx.post(conf['ollama_url'].rstrip('/')+'/api/chat',json=payload,timeout=conf['ollama_timeout'])
+        response=httpx.post(conf['ollama_url'].rstrip('/')+'/api/chat',json=payload,timeout=conf['ollama_timeout'],trust_env=False)
         response.raise_for_status()
         return response.json()['message']['content']
-    except (httpx.HTTPError, KeyError, ValueError) as exc: raise OllamaError(f'Ollama unavailable or model failed: {type(exc).__name__}') from exc
+    except (httpx.HTTPError, KeyError, ValueError) as exc: raise OllamaError(f'Ollama unavailable or model failed: {type(exc).__name__}: {str(exc)[:200]}') from exc
 
 def json_chat(system,prompt,images=None):
     content=chat(system,prompt,images,True)

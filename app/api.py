@@ -1,4 +1,4 @@
-
+from contextlib import asynccontextmanager
 from pathlib import Path
 import logging
 from tempfile import TemporaryDirectory
@@ -11,7 +11,19 @@ from app.pipeline import process_document
 logger = logging.getLogger("uvicorn.error")
 
 
+@asynccontextmanager
+async def lifespan(_app):
+    # Load PaddleOCR once at startup so the first request is not slow.
+    try:
+        from app.ocr.pdf_parser import warmup
+        await run_in_threadpool(warmup)
+    except Exception as exc:
+        logger.warning("OCR warm-up skipped: %s: %s", type(exc).__name__, exc)
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Maritime Certificate AI",
     version="2.0.0",
     description="Maritime classification, dates, OCR and optional Qwen vision"
@@ -88,8 +100,12 @@ async def extract_certificate(
                     "category": data.get("category"),
                     "start_date": data.get("start_date"),
                     "end_date": data.get("end_date"),
-                    "license_number": data.get("license_number")
-                }
+                    "license_number": data.get("license_number"),
+                    "certificate_id": result.get("certificate_id")
+                },
+                "requires_review": result.get("requires_review"),
+                "review_reasons": result.get("review_reasons", []),
+                "warnings": result.get("warnings", [])
             }
 
         except ValueError as exc:
@@ -108,4 +124,3 @@ async def extract_certificate(
                 status_code=500,
                 detail="Processing error: " + type(exc).__name__
             ) from exc
-

@@ -1,0 +1,7 @@
+file,seconds_p50,pages,requires_review,ocr_path,ai_used,name,start_date,end_date,license_number
+samples/all_in_one/all-in-one.pdf,2.61,3,False,tesseract(passed),False,correct,correct,correct,correct
+samples/pssr/pssr.pdf,0.73,1,False,tesseract(passed),False,correct,correct,correct,correct
+samples/covid_vaccine/covid-vaccination.pdf,76.69,1,False,tesseract(escalated) > paddleocr(escalated),True,correct,correct,correct,correct
+samples/passport/passport.pdf,57.73,2,False,tesseract(escalated) > paddleocr(escalated),True,correct,correct,correct,correct
+samples/sid/SID.pdf,76.07,2,True,tesseract(escalated) > paddleocr(escalated),True,correct,correct,correct,correct
+samples/seaman-book/seaman-book.pdf,66.86,4,False,tesseract(escalated) > paddleocr(passed),False,correct,correct,correct,correct

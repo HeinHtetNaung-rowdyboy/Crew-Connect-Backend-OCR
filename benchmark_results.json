@@ -1,0 +1,227 @@
+[
+  {
+    "file": "samples/all_in_one/all-in-one.pdf",
+    "seconds_p50": 2.61,
+    "seconds_max": 2.61,
+    "pages": 3,
+    "requires_review": false,
+    "used_ai": false,
+    "ocr_path": "tesseract(passed)",
+    "review_reasons": [],
+    "stages": {
+      "ocr_parse": 2.6,
+      "classify": 0.0,
+      "rule_extract": 0.01,
+      "validate": 0.0
+    },
+    "expected": {
+      "certificate_name": "All in One",
+      "start_date": "2023-11-21",
+      "end_date": "2028-10-25",
+      "license_number": "ERP075076"
+    },
+    "got": {
+      "certificate_name": "All in One",
+      "start_date": "2023-11-21",
+      "end_date": "2028-10-25",
+      "license_number": "ERP075076"
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  },
+  {
+    "file": "samples/pssr/pssr.pdf",
+    "seconds_p50": 0.73,
+    "seconds_max": 0.73,
+    "pages": 1,
+    "requires_review": false,
+    "used_ai": false,
+    "ocr_path": "tesseract(passed)",
+    "review_reasons": [],
+    "stages": {
+      "ocr_parse": 0.72,
+      "classify": 0.0,
+      "rule_extract": 0.0,
+      "validate": 0.0
+    },
+    "expected": {
+      "certificate_name": "PSSR",
+      "start_date": "2026-08-10",
+      "end_date": null,
+      "license_number": "MES/HSB 19-194/2026"
+    },
+    "got": {
+      "certificate_name": "PSSR",
+      "start_date": "2026-08-10",
+      "end_date": null,
+      "license_number": "MES/HSB 19-194/2026"
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  },
+  {
+    "file": "samples/covid_vaccine/covid-vaccination.pdf",
+    "seconds_p50": 76.69,
+    "seconds_max": 76.69,
+    "pages": 1,
+    "requires_review": false,
+    "used_ai": true,
+    "ocr_path": "tesseract(escalated) > paddleocr(escalated)",
+    "review_reasons": [],
+    "stages": {
+      "ocr_parse": 17.03,
+      "classify": 0.0,
+      "rule_extract": 0.0,
+      "validate": 0.0,
+      "render_for_ai": 0.09,
+      "qwen_extract": 59.57
+    },
+    "expected": {
+      "certificate_name": "COVID Vaccine",
+      "start_date": "2022-04-21",
+      "end_date": null,
+      "license_number": null
+    },
+    "got": {
+      "certificate_name": "COVID Vaccine",
+      "start_date": "2022-04-21",
+      "end_date": null,
+      "license_number": null
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  },
+  {
+    "file": "samples/passport/passport.pdf",
+    "seconds_p50": 57.73,
+    "seconds_max": 57.73,
+    "pages": 2,
+    "requires_review": false,
+    "used_ai": true,
+    "ocr_path": "tesseract(escalated) > paddleocr(escalated)",
+    "review_reasons": [],
+    "stages": {
+      "ocr_parse": 14.28,
+      "classify": 0.0,
+      "rule_extract": 0.0,
+      "validate": 0.0,
+      "render_for_ai": 0.18,
+      "qwen_extract": 43.26
+    },
+    "expected": {
+      "certificate_name": "여권/Passport",
+      "start_date": "2024-01-18",
+      "end_date": "2029-01-17",
+      "license_number": "MI449665"
+    },
+    "got": {
+      "certificate_name": "여권/Passport",
+      "start_date": "2024-01-18",
+      "end_date": "2029-01-17",
+      "license_number": "MI449665"
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  },
+  {
+    "file": "samples/sid/SID.pdf",
+    "seconds_p50": 76.07,
+    "seconds_max": 76.07,
+    "pages": 2,
+    "requires_review": true,
+    "used_ai": true,
+    "ocr_path": "tesseract(escalated) > paddleocr(escalated)",
+    "review_reasons": [
+      "start_date not found in OCR text",
+      "end_date not found in OCR text"
+    ],
+    "stages": {
+      "ocr_parse": 10.25,
+      "classify": 0.0,
+      "rule_extract": 0.0,
+      "validate": 0.0,
+      "render_for_ai": 0.15,
+      "qwen_extract": 65.67
+    },
+    "expected": {
+      "certificate_name": "선원등록증/SID",
+      "start_date": "2025-02-13",
+      "end_date": "2030-02-13",
+      "license_number": "MS0095000"
+    },
+    "got": {
+      "certificate_name": "선원등록증/SID",
+      "start_date": "2025-02-13",
+      "end_date": "2030-02-13",
+      "license_number": "MS0095000"
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  },
+  {
+    "file": "samples/seaman-book/seaman-book.pdf",
+    "seconds_p50": 66.86,
+    "seconds_max": 66.86,
+    "pages": 4,
+    "requires_review": false,
+    "used_ai": false,
+    "ocr_path": "tesseract(escalated) > paddleocr(passed)",
+    "review_reasons": [],
+    "stages": {
+      "ocr_parse": 66.85,
+      "classify": 0.0,
+      "rule_extract": 0.0,
+      "validate": 0.0
+    },
+    "expected": {
+      "certificate_name": "선원수첩/Seaman Book (MM)",
+      "start_date": "2019-03-26",
+      "end_date": "2029-03-25",
+      "license_number": "75076"
+    },
+    "got": {
+      "certificate_name": "선원수첩/Seaman Book (MM)",
+      "start_date": "2019-03-26",
+      "end_date": "2029-03-25",
+      "license_number": "75076"
+    },
+    "verdicts": {
+      "certificate_name": "correct",
+      "start_date": "correct",
+      "end_date": "correct",
+      "license_number": "correct"
+    },
+    "warnings": [],
+    "error": null
+  }
+]

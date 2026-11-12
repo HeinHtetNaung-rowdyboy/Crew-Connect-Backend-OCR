@@ -1,36 +1,151 @@
-
 {
   "certificates": [
     {
-      "id": "all_in_one", "name": "All in One", "certificate_type": "Additional Certificate", "category": "CERTIFICATE",
-      "aliases": ["rating as able seafarer engine", "rating forming part of an engine-room watch", "certificate of proficiency for security training", "survival craft and rescue boats", "safety familiarization and basic training"],
-      "required_any": ["certificate of proficiency", "marine administration"], "expiration_policy": "from_document"
-    },
-    {
-      "id": "pssr", "name": "PSSR", "certificate_type": "Additional Certificate", "category": "CERTIFICATE",
-      "aliases": ["prevention of and response to violence and harassment", "including sexual harassment bullying and sexual assault", "personal safety and social responsibilities", "personal safety and social responsibility"],
+      "id": "all_in_one",
+      "name": "All in One",
+      "certificate_type": "Additional Certificate",
+      "category": "CERTIFICATE",
+      "aliases": [
+        "rating as able seafarer engine",
+        "rating forming part of an engine-room watch",
+        "certificate of proficiency for security training",
+        "survival craft and rescue boats",
+        "safety familiarization and basic training"
+      ],
+      "required_any": [
+        "certificate of proficiency",
+        "marine administration"
+      ],
       "expiration_policy": "from_document"
     },
     {
-      "id": "covid_vaccine", "name": "COVID Vaccine", "certificate_type": "Personal Certificate", "category": "PERSONAL",
-      "aliases": ["covid-19 vaccination record card", "covid-19 vaccination certificate", "vaccination record card", "vaccine dose"],
+      "id": "pssr",
+      "name": "PSSR",
+      "certificate_type": "Additional Certificate",
+      "category": "CERTIFICATE",
+      "aliases": [
+        "prevention of and response to violence and harassment",
+        "including sexual harassment bullying and sexual assault",
+        "personal safety and social responsibilities",
+        "personal safety and social responsibility"
+      ],
       "expiration_policy": "from_document"
     },
     {
-      "id": "passport", "name": "여권/Passport", "certificate_type": "Personal Certificate", "category": "PERSONAL",
-      "aliases": ["republic of the union of myanmar", "passport", "passport no", "psmmr"],
-      "expiration_policy": "from_document"
+      "id": "covid_vaccine",
+      "name": "COVID Vaccine",
+      "certificate_type": "Personal Certificate",
+      "category": "PERSONAL",
+      "aliases": [
+        "covid-19 vaccination record card",
+        "covid-19 vaccination certificate",
+        "vaccination record card",
+        "vaccine dose"
+      ],
+      "expiration_policy": "from_document",
+      "require_engine": "paddleocr"
     },
     {
-      "id": "sid", "name": "선원등록증/SID", "certificate_type": "Personal Certificate", "category": "PERSONAL",
-      "aliases": ["seafarers identity document", "seafarer's identity document", "seafarer identity document", "seafarers identification document", "seafarer identification document", "seafarers identity card", "seafarer identity card", "seafarer id card", "seafarer id", "seafarers identification", "seafarer identification", "seafarer's identification", "seafarers identity document sid", "seafarer identity document sid", "sid card", "sid number", "sid no", "sid no.", "ilo convention no 185", "ilo convention c185", "선원등록증"],
-      "required_any": ["seafarers identity", "seafarer identity", "seafarers identification", "seafarer identification", "sid no", "sid number", "ilo convention no 185"],
-      "expiration_policy": "from_document"
+      "id": "passport",
+      "name": "여권/Passport",
+      "certificate_type": "Personal Certificate",
+      "category": "PERSONAL",
+      "aliases": [
+        "republic of the union of myanmar",
+        "passport",
+        "passport no",
+        "psmmr"
+      ],
+      "expiration_policy": "from_document",
+      "license_pattern": "[A-Z]{1,3}\\d{6,9}"
     },
     {
-      "id": "seaman_book", "name": "선원수첩/Seaman Book (MM)", "certificate_type": "Personal Certificate", "category": "PERSONAL",
-      "aliases": ["seaman book", "seaman's book", "seamans book", "seamen book", "seaman service book", "seaman record book", "seafarer book", "seafarer's book", "seafarers book", "seafarer service book", "seafarers service book", "seafarer record book", "seafarers record book", "seafarers discharge book", "seafarer's discharge book", "seaman discharge book", "continuous discharge certificate", "continuous discharge book", "continuous discharge certificate and seafarers identity document", "seaman book myanmar", "myanmar seaman book", "myanmar seaman's book", "myanmar seafarer book", "seaman book mm", "seafarer book mm", "sirb", "seafarers identification and record book", "seafarer identification and record book", "선원수첩"],
-      "required_any": ["seaman book", "seamans book", "seaman's book", "seafarer book", "seafarers record book", "seafarer record book", "discharge book", "continuous discharge", "identification and record book"],
+      "id": "sid",
+      "name": "선원등록증/SID",
+      "certificate_type": "Personal Certificate",
+      "category": "PERSONAL",
+      "aliases": [
+        "seafarers identity document",
+        "seafarer's identity document",
+        "seafarer identity document",
+        "seafarers identification document",
+        "seafarer identification document",
+        "seafarers identity card",
+        "seafarer identity card",
+        "seafarer id card",
+        "seafarer id",
+        "seafarers identification",
+        "seafarer identification",
+        "seafarer's identification",
+        "seafarers identity document sid",
+        "seafarer identity document sid",
+        "sid card",
+        "sid number",
+        "sid no",
+        "sid no.",
+        "ilo convention no 185",
+        "ilo convention c185",
+        "선원등록증"
+      ],
+      "required_any": [
+        "seafarers identity",
+        "seafarer identity",
+        "seafarers identification",
+        "seafarer identification",
+        "sid no",
+        "sid number",
+        "ilo convention no 185"
+      ],
+      "expiration_policy": "from_document",
+      "license_pattern": "[A-Z]{1,3}\\d{6,9}"
+    },
+    {
+      "id": "seaman_book",
+      "name": "선원수첩/Seaman Book (MM)",
+      "certificate_type": "Personal Certificate",
+      "category": "PERSONAL",
+      "aliases": [
+        "seaman book",
+        "seaman's book",
+        "seamans book",
+        "seamen book",
+        "seaman service book",
+        "seaman record book",
+        "seafarer book",
+        "seafarer's book",
+        "seafarers book",
+        "seafarer service book",
+        "seafarers service book",
+        "seafarer record book",
+        "seafarers record book",
+        "seafarers discharge book",
+        "seafarer's discharge book",
+        "seaman discharge book",
+        "continuous discharge certificate",
+        "continuous discharge book",
+        "continuous discharge certificate and seafarers identity document",
+        "seaman book myanmar",
+        "myanmar seaman book",
+        "myanmar seaman's book",
+        "myanmar seafarer book",
+        "seaman book mm",
+        "seafarer book mm",
+        "sirb",
+        "seafarers identification and record book",
+        "seafarer identification and record book",
+        "선원수첩"
+      ],
+      "required_any": [
+        "seaman book",
+        "seamans book",
+        "seaman's book",
+        "seafarer book",
+        "seafarers record book",
+        "seafarer record book",
+        "discharge book",
+        "continuous discharge",
+        "identification and record book"
+      ],
       "expiration_policy": "from_document"
     }
   ]

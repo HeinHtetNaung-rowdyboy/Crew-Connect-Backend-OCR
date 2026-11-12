@@ -1,6 +1,7 @@
 from datetime import date
 from app.extraction.date_parser import parse_date
 from app.extraction.schemas import CertificateData
+from app.validation.gate import required_fields
 
 DATE_FIELDS = ('training_date','issue_date','examination_date','expire_date')
 
@@ -20,7 +21,7 @@ def validate_and_normalize(classification: dict, fields: dict):
         warnings.append('End date precedes start date')
     if clean['end_date'] and clean['end_date'] < date.today().isoformat():
         warnings.append('Document appears expired')
-    if not clean['license_number']: warnings.append('License/certificate number not confidently extracted')
+    if not clean['license_number'] and 'license_number' in required_fields(classification['certificate_name']): warnings.append('License/certificate number not confidently extracted')
     if classification['certificate_name']=='Unknown': warnings.append('Unknown document type')
     document=CertificateData(certificate_name=classification['certificate_name'], certificate_type=classification['certificate_type'], category=classification['category'], **clean)
     return document.model_dump(),warnings

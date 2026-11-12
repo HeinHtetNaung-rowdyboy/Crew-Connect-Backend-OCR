@@ -1,4 +1,3 @@
-
 """Qwen2.5-VL vision extraction via local Ollama with PDF rasterization."""
 
 import pymupdf as fitz
@@ -40,6 +39,16 @@ Certificate-specific extraction rules:
    - If Book No. is missing or unclear,
      return null for license_number.
 
+3. 여권/Passport
+   - license_number is the CURRENT passport number, printed
+     next to the label "Passport No" on the photo page and at the
+     start of the second line of the machine-readable zone
+     (e.g. MI449665<0MMR...).
+   - Ignore any number in an endorsement or observation such as
+     "issued in replacement of passport No. ...": that is an OLD
+     passport.
+   - Return the number exactly as printed; if unclear, return null.
+
 General rules:
    - Extract only information visible in the document.
    - Never invent dates or numbers.
@@ -60,10 +69,19 @@ def render_pages(path: Path) -> list[bytes]:
         if len(pdf) > cfg["max_pages"]:
             raise ValueError("Too many pages")
 
+        from app.ocr.regions import page_clip, render
+
         for page in list(pdf)[:cfg["vision_max_pages"]]:
-            pix = page.get_pixmap(
-                matrix=fitz.Matrix(1.45, 1.45),
-                alpha=False
+            clip = (
+                page_clip(page, cfg["crop_max_area"], cfg["crop_max_outside"])
+                if cfg["autocrop"]
+                else None
+            )
+            pix = render(
+                page,
+                cfg["vision_zoom"],
+                cfg["vision_crop_px"],
+                clip
             )
             images.append(pix.tobytes("png"))
 
