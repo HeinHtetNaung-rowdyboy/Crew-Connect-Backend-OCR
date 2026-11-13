@@ -15,7 +15,7 @@ def settings():
         'ollama_model': os.getenv('OLLAMA_MODEL', 'qwen2.5vl:3b'),
         'ollama_timeout': int(os.getenv('OLLAMA_TIMEOUT', '240')),
         'vision_zoom': float(os.getenv('VISION_ZOOM', '1.45')),
-        'vision_max_pages': int(os.getenv('VISION_MAX_PAGES', '4')),
+        'vision_max_pages': int(os.getenv('VISION_MAX_PAGES', '3')),
         'use_llm_classifier': os.getenv('USE_LLM_CLASSIFIER', 'true').lower() == 'true',
         'use_ai_reviewer': os.getenv('USE_AI_REVIEWER', 'true').lower() == 'true',
         'tesseract_lang': os.getenv('TESSERACT_LANG', 'eng'),
